@@ -1,7 +1,9 @@
-package auracle;
+package com.moxvallix;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -16,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.lang.Math;
 
 public class ResourcePackURL extends JavaPlugin implements Listener {
     static Server server;
@@ -36,7 +39,13 @@ public class ResourcePackURL extends JavaPlugin implements Listener {
                 final URL url = new URL(ymlYourFile.getString("ResourcePackURL"));
                 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
                 int responseCode = huc.getResponseCode();
-                if (responseCode == 200) player.setResourcePack(url.toString());
+                int min = 1;
+                int max = 100000000;
+                int randnum = (int)(Math.random() * (max - min + 1) + min);
+                String randstring = Integer.toString(randnum);
+                String totalurl = String.join("", url.toString(),"#",randstring);
+                console.sendMessage(totalurl);
+                if (responseCode == 200) player.setResourcePack(totalurl);
             }
         } catch (UnknownHostException uhe) {
             console.sendMessage(ChatColor.RED + "Resource Pack URL UnknownHostException : " + uhe.getMessage());
@@ -50,6 +59,7 @@ public class ResourcePackURL extends JavaPlugin implements Listener {
     public void onEnable() {
         plugin = this;
         server = this.getServer();
+        this.getCommand("rp").setExecutor(new CommandRP());
         console = server.getConsoleSender();
         server.getPluginManager().registerEvents(this, this);
         console.sendMessage(ChatColor.GREEN + "" + ChatColor.ITALIC + "Resource Pack URL Loaded");

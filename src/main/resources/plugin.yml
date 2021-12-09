@@ -1,0 +1,8 @@
+name: ResourcePackURL
+main: com.moxvallix.ResourcePackURL
+version: 1.0
+author: Auracle + Moxvallix
+api-version: 1.14
+commands:
+  rp:
+    description: Refresh resources
